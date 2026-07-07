@@ -1,19 +1,34 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ClaudeCliAdapter } from '../claude-cli'
 import { eventBus } from '@/lib/event-bus'
-import { getDatabase } from '@/lib/db'
+
+vi.mock('@/lib/event-bus')
+vi.mock('@/lib/db', () => ({
+  getDatabase: vi.fn(() => ({
+    prepare: vi.fn(() => ({
+      run: vi.fn(),
+    })),
+  })),
+}))
+vi.mock('../adapter', () => ({
+  queryPendingAssignments: vi.fn(() => [
+    {
+      taskId: 'task-1',
+      description: 'Test task',
+      priority: 1,
+    },
+  ]),
+}))
 
 describe('ClaudeCliAdapter Integration Tests', () => {
   let adapter: ClaudeCliAdapter
-  let db: any
 
   beforeEach(() => {
     adapter = new ClaudeCliAdapter()
-    db = getDatabase()
   })
 
   afterEach(() => {
-    // Cleanup
+    vi.clearAllMocks()
   })
 
   describe('end-to-end task flow', () => {

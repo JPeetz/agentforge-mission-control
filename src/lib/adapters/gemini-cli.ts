@@ -132,11 +132,15 @@ export class GeminiCliAdapter implements FrameworkAdapter {
   async reportTask(report: TaskReport): Promise<void> {
     try {
       const db = getDatabase()
+      const metadata = JSON.stringify({
+        progress: report.progress,
+        output: report.output || {},
+      })
       db.prepare(`
         UPDATE tasks
-        SET status = ?, progress = ?, output = ?, updated_at = CURRENT_TIMESTAMP
+        SET status = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `).run(report.status, report.progress, JSON.stringify(report.output || {}), report.taskId)
+      `).run(report.status, metadata, report.taskId)
 
       eventBus.broadcast('task.updated', {
         id: report.taskId,

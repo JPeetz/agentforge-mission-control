@@ -3,7 +3,13 @@ import { GeminiCliAdapter } from '../gemini-cli'
 import { eventBus } from '@/lib/event-bus'
 
 vi.mock('@/lib/event-bus')
-vi.mock('@/lib/db')
+vi.mock('@/lib/db', () => ({
+  getDatabase: vi.fn(() => ({
+    prepare: vi.fn(() => ({
+      run: vi.fn(),
+    })),
+  })),
+}))
 vi.mock('../adapter', () => ({
   queryPendingAssignments: vi.fn(() => [
     {

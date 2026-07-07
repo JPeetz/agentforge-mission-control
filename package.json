@@ -1,7 +1,7 @@
 {
-  "name": "mission-control",
-  "version": "2.1.0",
-  "description": "OpenClaw Mission Control — open-source agent orchestration dashboard",
+  "name": "@agentforge/mission-control",
+  "version": "0.0.0-alpha.0",
+  "description": "AgentForge Mission Control — provider-agnostic AI agent orchestration with shared memory (Memex) and knowledge visualization (Galaxy)",
   "scripts": {
     "verify:node": "node scripts/check-node-version.mjs",
     "api:parity": "node scripts/check-api-contract-parity.mjs --root . --openapi openapi.json --ignore-file scripts/api-contract-parity.ignore",
@@ -15,10 +15,16 @@
     "start:standalone": "pnpm run verify:node && bash scripts/start-standalone.sh",
     "deploy:standalone": "pnpm run verify:node && bash scripts/deploy-standalone.sh",
     "lint": "pnpm run verify:node && eslint .",
+    "lint:fix": "pnpm run verify:node && eslint . --fix",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
     "typecheck": "pnpm run verify:node && tsc --noEmit",
+    "security:scan": "npm audit --audit-level=moderate",
     "test": "pnpm run verify:node && vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
+    "test:unit": "vitest run --include='**/*.test.ts'",
+    "test:integration": "vitest run --include='**/*.integration.test.ts'",
     "test:e2e": "pnpm run verify:node && playwright test",
     "test:e2e:openclaw:local": "pnpm run verify:node && E2E_GATEWAY_EXPECTED=0 playwright test -c playwright.openclaw.local.config.ts",
     "test:e2e:openclaw:gateway": "pnpm run verify:node && E2E_GATEWAY_EXPECTED=1 playwright test -c playwright.openclaw.gateway.config.ts",
@@ -79,17 +85,24 @@
     "node": ">=22"
   },
   "keywords": [
-    "openclaw",
-    "agent",
+    "agent-os",
+    "multi-llm",
     "orchestration",
+    "shared-memory",
+    "memex",
+    "knowledge-graph",
+    "galaxy-visualization",
+    "claude-cli",
+    "gemini-cli",
+    "antigravity",
     "dashboard",
     "nextjs"
   ],
-  "author": "Builderz Labs",
+  "author": "AgentForge Team (based on Mission Control by Builderz Labs)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/builderz-labs/mission-control.git"
+    "url": "https://github.com/agentforge/mission-control.git"
   },
   "packageManager": "pnpm@10.29.3",
   "pnpm": {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ClaudeCliAdapter } from '../claude-cli'
+import { GeminiCliAdapter } from '../gemini-cli'
 import { eventBus } from '@/lib/event-bus'
 
 vi.mock('@/lib/event-bus')
@@ -14,26 +14,26 @@ vi.mock('../adapter', () => ({
   queryPendingAssignments: vi.fn(() => [
     {
       taskId: 'task-1',
-      description: 'Claude task',
+      description: 'Gemini task',
       priority: 1,
     },
   ]),
 }))
 
-describe('ClaudeCliAdapter', () => {
-  let adapter: ClaudeCliAdapter
+describe('GeminiCliAdapter', () => {
+  let adapter: GeminiCliAdapter
   const mockEventBus = eventBus as any
 
   beforeEach(() => {
     vi.clearAllMocks()
-    adapter = new ClaudeCliAdapter()
+    adapter = new GeminiCliAdapter()
   })
 
   it('should register agent and broadcast event', async () => {
     const agent = {
-      agentId: 'claude-cli-1',
-      name: 'Claude Agent',
-      framework: 'claude-cli',
+      agentId: 'gemini-cli-1',
+      name: 'Gemini Agent',
+      framework: 'gemini-cli',
     }
 
     await adapter.register(agent)
@@ -43,7 +43,7 @@ describe('ClaudeCliAdapter', () => {
 
   it('should handle heartbeat', async () => {
     const payload = {
-      agentId: 'claude-cli-1',
+      agentId: 'gemini-cli-1',
       status: 'online',
     }
 
@@ -55,7 +55,7 @@ describe('ClaudeCliAdapter', () => {
   it('should report task completion', async () => {
     const report = {
       taskId: 'task-1',
-      agentId: 'claude-cli-1',
+      agentId: 'gemini-cli-1',
       progress: 100,
       status: 'completed',
       output: { result: 'success' },
@@ -67,24 +67,24 @@ describe('ClaudeCliAdapter', () => {
   })
 
   it('should get assignments', async () => {
-    const assignments = await adapter.getAssignments('claude-cli-1')
+    const assignments = await adapter.getAssignments('gemini-cli-1')
 
     expect(Array.isArray(assignments)).toBe(true)
   })
 
   it('should disconnect agent', async () => {
     await adapter.register({
-      agentId: 'claude-cli-1',
+      agentId: 'gemini-cli-1',
       name: 'Agent',
-      framework: 'claude-cli',
+      framework: 'gemini-cli',
     })
 
-    await adapter.disconnect('claude-cli-1')
+    await adapter.disconnect('gemini-cli-1')
 
     expect(mockEventBus.broadcast).toHaveBeenCalled()
   })
 
   it('should have correct framework identifier', () => {
-    expect(adapter.framework).toBe('claude-cli')
+    expect(adapter.framework).toBe('gemini-cli')
   })
 })
